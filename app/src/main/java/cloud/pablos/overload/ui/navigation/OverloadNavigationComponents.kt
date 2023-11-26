@@ -3,6 +3,8 @@ package cloud.pablos.overload.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -81,7 +83,9 @@ fun OverloadNavigationRail(
                             },
                         )
 
-                        if (state.selectedDayCalendar == LocalDate.now().toString()) {
+                        AnimatedVisibility(
+                            visible = state.selectedDayCalendar == LocalDate.now().toString(),
+                        ) {
                             OverloadNavigationFabSmall(state = state, onEvent = onEvent)
                         }
                     }
