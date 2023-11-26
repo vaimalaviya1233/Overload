@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -44,7 +43,6 @@ import cloud.pablos.overload.ui.navigation.OverloadNavigationActions
 import cloud.pablos.overload.ui.navigation.OverloadNavigationRail
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopLevelDestination
-import cloud.pablos.overload.ui.navigation.PermanentNavigationDrawerContent
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTab
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab
 import cloud.pablos.overload.ui.tabs.home.HomeTab
@@ -88,8 +86,12 @@ fun OverloadApp(
             contentType = OverloadContentType.SINGLE_PANE
         }
         WindowWidthSizeClass.Medium -> {
-            navigationType = OverloadNavigationType.NAVIGATION_RAIL
-            contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
+            navigationType = if (foldingDevicePosture is DevicePosture.NormalPosture) {
+                OverloadNavigationType.BOTTOM_NAVIGATION
+            } else {
+                OverloadNavigationType.NAVIGATION_RAIL
+            }
+            contentType = if (foldingDevicePosture is DevicePosture.NormalPosture) {
                 OverloadContentType.DUAL_PANE
             } else {
                 OverloadContentType.SINGLE_PANE
@@ -98,11 +100,7 @@ fun OverloadApp(
             Log.d("ol_df", displayFeatures.toString())
         }
         WindowWidthSizeClass.Expanded -> {
-            navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
-                OverloadNavigationType.NAVIGATION_RAIL
-            } else {
-                OverloadNavigationType.PERMANENT_NAVIGATION_DRAWER
-            }
+            navigationType = OverloadNavigationType.NAVIGATION_RAIL
             contentType = OverloadContentType.DUAL_PANE
         }
         else -> {
@@ -155,29 +153,6 @@ private fun OverloadNavigationWrapper(
         navBackStackEntry?.destination?.route ?: OverloadRoute.HOME
 
     when (navigationType) {
-        OverloadNavigationType.PERMANENT_NAVIGATION_DRAWER -> {
-            PermanentNavigationDrawer(drawerContent = {
-                PermanentNavigationDrawerContent(
-                    selectedDestination = selectedDestination,
-                    navigationContentPosition = navigationContentPosition,
-                    navigateToTopLevelDestination = navigationActions::navigateTo,
-                    state = state,
-                    onEvent = onEvent,
-                )
-            }) {
-                OverloadAppContent(
-                    navigationType = navigationType,
-                    contentType = contentType,
-                    navigationContentPosition = navigationContentPosition,
-                    navController = navController,
-                    selectedDestination = selectedDestination,
-                    navigateToTopLevelDestination = navigationActions::navigateTo,
-                    state = state,
-                    onEvent = onEvent,
-                )
-            }
-        }
-
         OverloadNavigationType.BOTTOM_NAVIGATION -> {
             OverloadAppContent(
                 navigationType = navigationType,
