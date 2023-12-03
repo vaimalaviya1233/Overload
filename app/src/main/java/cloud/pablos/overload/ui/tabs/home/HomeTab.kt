@@ -6,6 +6,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -71,9 +75,10 @@ fun HomeTab(
         floatingActionButton = {
             AnimatedVisibility(
                 visible = navigationType == OverloadNavigationType.BOTTOM_NAVIGATION &&
-                    state.selectedDayCalendar == LocalDate.now().toString(),
-                enter = scaleIn(),
-                exit = scaleOut(),
+                    state.selectedDayCalendar == LocalDate.now().toString() &&
+                    state.isDeletingHome.not(),
+                enter = if (state.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
+                exit = if (state.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
                 HomeTabFab(state = state, onEvent = onEvent)
             }
@@ -116,6 +121,11 @@ fun HomeTab(
             }
         }
     }
+}
+
+fun getFormattedDate(date: LocalDate, human: Boolean = false): String {
+    val formatter = DateTimeFormatter.ofPattern(if (human) "dd.MM.yyyy" else "yyyy-MM-dd")
+    return date.format(formatter)
 }
 
 fun getFormattedDate(daysBefore: Long): String {

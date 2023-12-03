@@ -39,11 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import cloud.pablos.overload.ui.utils.OverloadContentType
 import cloud.pablos.overload.ui.views.DayView
 import cloud.pablos.overload.ui.views.TextView
 import cloud.pablos.overload.ui.views.YearView
-import cloud.pablos.overload.ui.views.getFormattedDate
 import cloud.pablos.overload.ui.views.getLocalDate
 import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import kotlinx.coroutines.launch
