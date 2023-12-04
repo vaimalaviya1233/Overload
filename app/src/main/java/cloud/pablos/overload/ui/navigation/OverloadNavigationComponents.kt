@@ -210,36 +210,38 @@ fun ModalNavigationDrawerContent(
                         }
                     }
 
-                    Column(
-                        modifier = Modifier
-                            .layoutId(LayoutType.CONTENT)
-                            .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
-                            NavigationDrawerItem(
-                                selected = selectedDestination == overloadDestination.route,
-                                label = {
-                                    TextView(stringResource(id = overloadDestination.iconTextId))
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector =
-                                        if (selectedDestination == overloadDestination.route) {
-                                            overloadDestination.selectedIcon
-                                        } else {
-                                            overloadDestination.unselectedIcon
+                    Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
+                        AnimatedVisibility(visible = state.isFabOpen.not()) {
+                            Column(
+                                modifier = Modifier.verticalScroll(rememberScrollState()),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
+                                    NavigationDrawerItem(
+                                        selected = selectedDestination == overloadDestination.route,
+                                        label = {
+                                            TextView(stringResource(id = overloadDestination.iconTextId))
                                         },
-                                        contentDescription = stringResource(
-                                            id = overloadDestination.iconTextId,
+                                        icon = {
+                                            Icon(
+                                                imageVector =
+                                                if (selectedDestination == overloadDestination.route) {
+                                                    overloadDestination.selectedIcon
+                                                } else {
+                                                    overloadDestination.unselectedIcon
+                                                },
+                                                contentDescription = stringResource(
+                                                    id = overloadDestination.iconTextId,
+                                                ),
+                                            )
+                                        },
+                                        colors = NavigationDrawerItemDefaults.colors(
+                                            unselectedContainerColor = Color.Transparent,
                                         ),
+                                        onClick = { navigateToTopLevelDestination(overloadDestination) },
                                     )
-                                },
-                                colors = NavigationDrawerItemDefaults.colors(
-                                    unselectedContainerColor = Color.Transparent,
-                                ),
-                                onClick = { navigateToTopLevelDestination(overloadDestination) },
-                            )
+                                }
+                            }
                         }
                     }
                 },
