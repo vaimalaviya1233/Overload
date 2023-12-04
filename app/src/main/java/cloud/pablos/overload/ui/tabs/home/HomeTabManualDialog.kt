@@ -90,15 +90,12 @@ fun HomeTabManualDialog(
 
     val calendar = Calendar.getInstance()
 
-    val startDatePicker = DatePickerDialog(
-        context,
-        { _, year: Int, month: Int, day: Int ->
-            val calcMonth = month + 1
-            val newStartDate = selectedStart.withYear(year).withMonth(calcMonth).withDayOfMonth(day)
-
-            if (newStartDate.toLocalDate() <= date) {
-                selectedStart = newStartDate
+    fun updateSelectedTime(newDateTime: LocalDateTime, isStart: Boolean) {
+        if (isStart) {
+            if (newDateTime.toLocalDate() <= date) {
+                selectedStart = newDateTime
                 selectedStartDateText = getFormattedDate(selectedStart.toLocalDate(), true)
+                selectedStartTimeText = getFormattedTime(selectedStart)
 
                 if (selectedStart > selectedEnd) {
                     selectedEnd = selectedStart
@@ -106,6 +103,26 @@ fun HomeTabManualDialog(
                     selectedEndTimeText = getFormattedTime(selectedEnd)
                 }
             }
+        } else {
+            selectedEnd = newDateTime
+            selectedEndDateText = getFormattedDate(selectedEnd.toLocalDate(), true)
+            selectedEndTimeText = getFormattedTime(selectedEnd)
+
+            if (selectedEnd < selectedStart) {
+                selectedStart = selectedEnd
+                selectedStartDateText = getFormattedDate(selectedStart.toLocalDate(), true)
+                selectedStartTimeText = getFormattedTime(selectedStart)
+            }
+        }
+    }
+
+    val startDatePicker = DatePickerDialog(
+        context,
+        { _, year: Int, month: Int, day: Int ->
+            val calcMonth = month + 1
+            val newStartDateTime = selectedStart.withYear(year).withMonth(calcMonth).withDayOfMonth(day)
+
+            updateSelectedTime(newStartDateTime, true)
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -115,15 +132,9 @@ fun HomeTabManualDialog(
     val startTimePicker = TimePickerDialog(
         context,
         { _, selectedHour: Int, selectedMinute: Int ->
-            val newStartTime = selectedStart.withHour(selectedHour).withMinute(selectedMinute)
-            selectedStart = newStartTime
-            selectedStartTimeText = getFormattedTime(selectedStart)
+            val newStartDateTime = selectedStart.withHour(selectedHour).withMinute(selectedMinute)
 
-            if (selectedStart > selectedEnd) {
-                selectedEnd = selectedStart
-                selectedEndDateText = getFormattedDate(selectedEnd.toLocalDate(), true)
-                selectedEndTimeText = getFormattedTime(selectedEnd)
-            }
+            updateSelectedTime(newStartDateTime, true)
         },
         selectedStart.hour,
         selectedStart.minute,
@@ -134,18 +145,9 @@ fun HomeTabManualDialog(
         context,
         { _, year: Int, month: Int, day: Int ->
             val calcMonth = month + 1
-            val newEndDate = selectedEnd.withYear(year).withMonth(calcMonth).withDayOfMonth(day)
+            val newEndDateTime = selectedEnd.withYear(year).withMonth(calcMonth).withDayOfMonth(day)
 
-            if (newEndDate.toLocalDate() <= date) {
-                selectedEnd = newEndDate
-                selectedEndDateText = getFormattedDate(selectedEnd.toLocalDate(), true)
-
-                if (selectedEnd < selectedStart) {
-                    selectedStart = selectedEnd
-                    selectedStartDateText = getFormattedDate(selectedStart.toLocalDate(), true)
-                    selectedStartTimeText = getFormattedTime(selectedStart)
-                }
-            }
+            updateSelectedTime(newEndDateTime, false)
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -155,15 +157,9 @@ fun HomeTabManualDialog(
     val endTimePicker = TimePickerDialog(
         context,
         { _, selectedHour: Int, selectedMinute: Int ->
-            val newEndTime = selectedEnd.withHour(selectedHour).withMinute(selectedMinute)
-            selectedEnd = newEndTime
-            selectedEndTimeText = getFormattedTime(selectedEnd)
+            val newEndDateTime = selectedEnd.withHour(selectedHour).withMinute(selectedMinute)
 
-            if (selectedEnd < selectedStart) {
-                selectedStart = selectedEnd
-                selectedStartDateText = getFormattedDate(selectedStart.toLocalDate(), true)
-                selectedStartTimeText = getFormattedTime(selectedStart)
-            }
+            updateSelectedTime(newEndDateTime, false)
         },
         selectedEnd.hour,
         selectedEnd.minute,
