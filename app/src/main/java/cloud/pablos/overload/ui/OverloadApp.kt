@@ -96,8 +96,6 @@ fun OverloadApp(
             } else {
                 OverloadContentType.SINGLE_PANE
             }
-
-            Log.d("ol_df", displayFeatures.toString())
         }
         WindowWidthSizeClass.Expanded -> {
             navigationType = OverloadNavigationType.NAVIGATION_RAIL

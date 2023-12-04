@@ -85,28 +85,30 @@ fun OverloadNavigationRail(
                             OverloadNavigationFabSmall(state = state, onEvent = onEvent)
                         }
                     }
-
-                    Column(
-                        modifier = Modifier.layoutId(LayoutType.CONTENT),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
-                            NavigationRailItem(
-                                selected = selectedDestination == overloadDestination.route,
-                                onClick = { navigateToTopLevelDestination(overloadDestination) },
-                                icon = {
-                                    Icon(
-                                        imageVector =
-                                        if (selectedDestination == overloadDestination.route) {
-                                            overloadDestination.selectedIcon
-                                        } else {
-                                            overloadDestination.unselectedIcon
+                    Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
+                        AnimatedVisibility(visible = state.isFabOpen.not()) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
+                                    NavigationRailItem(
+                                        selected = selectedDestination == overloadDestination.route,
+                                        onClick = { navigateToTopLevelDestination(overloadDestination) },
+                                        icon = {
+                                            Icon(
+                                                imageVector =
+                                                if (selectedDestination == overloadDestination.route) {
+                                                    overloadDestination.selectedIcon
+                                                } else {
+                                                    overloadDestination.unselectedIcon
+                                                },
+                                                contentDescription = stringResource(id = overloadDestination.iconTextId),
+                                            )
                                         },
-                                        contentDescription = stringResource(id = overloadDestination.iconTextId),
                                     )
-                                },
-                            )
+                                }
+                            }
                         }
                     }
                 },
@@ -162,6 +164,7 @@ fun OverloadBottomNavigationBar(
         }
     }
 }
+
 @Composable
 fun ModalNavigationDrawerContent(
     selectedDestination: String,
@@ -203,7 +206,7 @@ fun ModalNavigationDrawerContent(
                         }
 
                         AnimatedVisibility(visible = state.selectedDayCalendar == LocalDate.now().toString()) {
-                            OverloadNavigationFab(state = state, onEvent = onEvent)
+                            OverloadNavigationFab(state, onEvent, onDrawerClicked)
                         }
                     }
 

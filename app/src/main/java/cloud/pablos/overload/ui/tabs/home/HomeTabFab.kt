@@ -2,7 +2,6 @@ package cloud.pablos.overload.ui.tabs.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -113,11 +112,10 @@ fun HomeTabFab(
                         },
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.primaryContainer,
-                        modifier = Modifier.animateContentSize(),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = if (isOngoing) stringResource(id = R.string.stop) else stringResource(id = R.string.start),
+                            contentDescription = stringResource(id = R.string.manual_entry),
                         )
                     }
                 }
@@ -128,11 +126,10 @@ fun HomeTabFab(
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.animateContentSize(),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(id = R.string.close),
                         modifier = Modifier.padding(8.dp),
                     )
                 }
@@ -148,7 +145,6 @@ fun HomeTabFab(
                     interactionSource = interactionSource,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.animateContentSize(),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
