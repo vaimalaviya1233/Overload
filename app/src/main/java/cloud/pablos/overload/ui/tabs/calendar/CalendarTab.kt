@@ -69,11 +69,11 @@ fun CalendarTab(
     val firstYear = if (state.items.isEmpty()) {
         LocalDate.now().year
     } else {
-        parseToLocalDateTime(state.items.first().startTime).year
+        state.items.minByOrNull { it.startTime }?.let { parseToLocalDateTime(it.startTime).year } ?: LocalDate.now().year
     }
 
     val firstDay = LocalDate.of(firstYear, 1, 1)
-    val lastDay = LocalDateTime.now().toLocalDate()
+    val lastDay = LocalDate.now()
     val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
 
     val pagerState = rememberPagerState(
